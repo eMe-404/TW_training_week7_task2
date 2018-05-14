@@ -1,0 +1,41 @@
+practice 1:
+
+ql> select * from Employee where name LIKE '%n%' and salary > 6000;
++----+------------+-----+----------+-----------+--------+
+| id | name       | age | gender   | companyId | salary |
++----+------------+-----+----------+-----------+--------+
+|  1 | 'xiaohong' |  19 | 'female' |         1 |   7000 |
++----+------------+-----+----------+-----------+--------+
+
+
+practice 2:
+
+mysql> select c.companyName,e.name from(select max(salary) as salary,companyId from Employee group by companyId) m INNER JOIN Employee e on m.companyId = e.companyId and m.salary= e.salary JOIN Company c on e.companyId = c.id;
++-------------+------------+
+| companyName | name       |
++-------------+------------+
+| 'baidu'     | 'xiaoming' |
+| 'alibaba'   | 'xiaohong' |
+| 'tengxun'   | 'xiaozhi'  |
++-------------+------------+
+
+
+practice 3:
+
+mysql> SELECT c.companyName,a.avgSalary FROM Company c INNER JOIN (select avg(salary) avgSalary,companyId from Employee GROUP BY companyId) a ON c.id = a.companyId ORDER BY a.avgSalary DESCLIMIT 1;
++-------------+-----------+
+| companyName | avgSalary |
++-------------+-----------+
+| 'tengxun'   | 8000.0000 |
++-------------+-----------+
+
+
+practice 4:
+
+ql> select e.*, c.companyName, avgSalary FROM Employee e INNER JOIN Company c ON e.companyId=c.id INNER JOIN (select avg(salary) avgSalary,companyId from Employee group by companyId) a ON a.companyId = e.companyId WHERE e.salary > a.avgSalary;
++----+------------+-----+----------+-----------+--------+-------------+-----------+
+| id | name       | age | gender   | companyId | salary | companyName | avgSalary |
++----+------------+-----+----------+-----------+--------+-------------+-----------+
+|  0 | 'xiaoming' |  20 | 'male'   |         0 |   6000 | 'baidu'     | 5000.0000 |
+|  1 | 'xiaohong' |  19 | 'female' |         1 |   7000 | 'alibaba'   | 6500.0000 |
++----+------------+-----+----------+-----------+--------+-------------+-----------+
